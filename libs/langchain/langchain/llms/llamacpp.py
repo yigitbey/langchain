@@ -68,6 +68,9 @@ class LlamaCpp(LLM):
     n_gpu_layers: Optional[int] = Field(None, alias="n_gpu_layers")
     """Number of layers to be loaded into gpu memory. Default None."""
 
+    n_gqa: Optional[int] = Field(None, alias="n_gqa")
+    """GQA required for LLAMA 2 models"""
+
     suffix: Optional[str] = Field(None)
     """A suffix to append to the generated text. If None, no suffix is appended."""
 
@@ -129,6 +132,8 @@ class LlamaCpp(LLM):
         ]
         model_params = {k: values[k] for k in model_param_names}
         # For backwards compatibility, only include if non-null.
+        if values["n_gqa"] is not None:
+            model_params["n_gqa"] = values["n_gqa"]
         if values["n_gpu_layers"] is not None:
             model_params["n_gpu_layers"] = values["n_gpu_layers"]
 
